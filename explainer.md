@@ -3,6 +3,13 @@
 The intent of this API is to expose the memory pressure events received by the system to web applications. It will enable
 web applications to be memory conscious and free up cache, drafts and such temporary objects.
 
+# Use cases
+
+* An application with an infinite-scroll wants to know if they need to remove items from their list and how agressively.
+* An application handling large files (photo/video sharing for example) wants to free up cache when the user's device need it.
+* An email application saving email content for fast interaction wants to free up the cache if it is needed by the system.
+* ...
+
 # Proposal
 
 We should be able to expose a `memorypressure` event with a level that can be “low”, “normal” and “high”.

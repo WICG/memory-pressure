@@ -13,22 +13,16 @@ web applications to be memory conscious and free up cache, drafts and such tempo
 # Proposal
 
 We should be able to expose a `memorypressure` event with a level that can be “low”, “normal” and “high”.
-The event could be exposed on the Navigator interface. Alternatively, it can hang out of navigator.memory for namespacing
+The event could be exposed on the `Navigator` interface. Alternatively, it can hang out of navigator.memory for namespacing
 (but at this point there is little value for that).
 
 The event is to reflect system memory pressure events to the web application. The state isn’t reflected in an attribute
 because to reflect how systems usually work: they send an event about memory pressure but usually do not send an event when
-memory pressure is passed. The expectations from an application is that it will do the best effort to clean things up.
+memory pressure no longer applies. The expectations from an application is that it will do the best effort to clean things up when needed.
 
 The level attribute of the event represents the level of memory pressure and how likely the browser is to kill the web
 application (or the system to kill the browser). After receiving a “high” memory pressure event, a web application should
-assume that it might die soon after if it was not able to clean up memory.
-
-The web application should free memory when receiving a memory pressure event and the user agent should do a garbage
-collection after sending such event. If the page wants to be able to clean memory asynchronously, it can call
-`event.preventDefault()` then later call the `done()` method to signal the UA the cleanup happened. The UA may ignore a
-call to `preventDefault()` or run cleanup process before `done()` if required by the current memory state or system
-conventions.
+assume that it might die soon after if it was not able to clean up memory. The web application should free memory when receiving a memory pressure event and the user agent should do a garbage collection after sending such event.
 
 On platforms that support less than three levels of memory pressure events, it is recommended to implement at least “high”.
 Web applications should not expect to receive memory pressure of incremental levels.
@@ -55,6 +49,10 @@ interface MemoryPressureEvent : Event {
   readonly attribute MemoryPressureLevel level;
 };
 ```
+
+# Alternative approach
+
+An alternative approach would be to allow web pages to ask to deal with memory pressure asynchronously. This comes with a few drawbacks but for completeness, it is mentioned here. In such a situation, we could imagine that the event can be cancelled using `event.preventDefalt()` and a method called `done()` could be added to the event interface. If `event.preventDefault()` is called, the UA would wait for `done()` to be called before running garbage collection or run it again if it did before. It has the benefit of being more flexible for heavily asynchronous web applications. However, it is unlikely that the UA will have the time to wait for the web application in most cases. Furthermore, it would expose garbage collection to the web pages.
 
 # Native APIs
 

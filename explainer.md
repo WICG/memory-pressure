@@ -16,11 +16,11 @@ We should be able to expose a `memorypressure` event exposed on the `Navigator` 
 and would have a `onmemorypressure` `EventHandler` on the `Navigator` object.
 
 The event reflects system memory pressure events to the web application. The state is not reflected in an attribute
-in order to reflect how systems usually work: they send an event about memory pressure but usually do not send an event when
-memory pressure no longer applies. The expectations from an application is that it will do the best effort to clean things up when needed.
+in order to reflect how systems usually work: they send an event about memory pressure (usually do not send an event when
+memory pressure no longer applies). The expectations from an application is that it will do the best effort to clean things up when needed.
 
 # Web IDL
-
+*NOTE*: This is the minimal initial proposal and expected to evolve significantly in the course of prototyping.
 ```js
 partial interface Navigator {
   attribute EventHandler onmemorypressure;
